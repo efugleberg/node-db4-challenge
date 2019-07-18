@@ -1,23 +1,25 @@
 exports.up = function(knex) {
   return knex.schema
-    .createTable("recipes", tbl => {
+    .createTable("recipe", tbl => {
       tbl.increments();
       tbl
-        .string("recipe_name", 128)
-        .unique()
-        .notNullable();
+        .text("recipe_name", 128)
+        .notNullable()
+        .unique();
     })
     .createTable("ingredients", tbl => {
       tbl.increments();
-      tbl.string("incredients_name", 128).notNullable();
+      tbl.text("ingredients_name", 128)
+      .notNullable();
     })
     .createTable("recipe_ingredients", tbl => {
       tbl.increments();
       tbl
-        .integer("recipes_id")
+        .integer("recipe_id")
         .unsigned()
         .references("id")
-        .inTable("recipes")
+        .inTable("recipe")
+        .notNullable()
         .onDelete("RESTRICT")
         .onUpdate("CASCADE");
       tbl
@@ -28,7 +30,7 @@ exports.up = function(knex) {
         .onDelete("RESTRICT")
         .onUpdate("CASCADE");
       tbl.float("ingredient_quantity").notNullable();
-      tbl.string("ingredient_measurement", 128).notNullable();
+      tbl.text("ingredient_measurement", 128).notNullable();
     })
     .createTable("steps", tbl => {
       tbl.increments();
@@ -37,10 +39,11 @@ exports.up = function(knex) {
         .unsigned()
         .notNullable();
       tbl
-        .integer("recipes_id")
+        .integer("recipe_id")
         .unsigned()
         .references("id")
-        .inTable("recipes")
+        .inTable("recipe")
+        .notNullable()
         .onDelete("RESTRICT")
         .onUpdate("CASCADE");
       // tbl
@@ -50,13 +53,13 @@ exports.up = function(knex) {
       //   .inTable("ingredients")
       //   .onDelete("RESTRICT")
       //   .onUpdate("CASCADE");
-      tbl.string("insructions", 128).notNullable();
+      tbl.text("instructions", 128).notNullable();
     });
 };
 
 exports.down = function(knex) {
   return knex.schema
-    .dropTableIfExists("recipes")
+    .dropTableIfExists("recipe")
     .dropTableIfExists("ingredients")
     .dropTableIfExists("recipe_ingredients")
     .dropTableIfExists("steps");
